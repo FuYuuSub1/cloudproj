@@ -1,0 +1,51 @@
+drop database if exists comp4442_project;
+create database if not exists comp4442_project;
+
+use comp4442_project;
+CREATE TABLE IF NOT EXISTS detail_records (
+  recordID int NOT NULL AUTO_INCREMENT,
+  driverID varchar(40) NOT NULL,
+  carPlateNumber varchar(40) NOT NULL, 
+  latitude double,
+  longtitude double,
+  speed int,
+  direction int,
+  siteName varchar(40),
+  time timestamp,
+  isRapidlySpeedup int,
+  isRapidlySlowdown int,
+  isNeutralSlide int,
+  isNeutralSlideFinished int,
+  neutralSlideTime long,
+  isOverspeed int,
+  isOverspeedFinished int,
+  overspeedTime long,
+  isFatigueDriving int,
+  isHthrottleStop int,
+  isOilLeak int,
+  PRIMARY KEY (recordID)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS detail_records (
+  recordID int NOT NULL AUTO_INCREMENT,
+  driverID varchar(40) NOT NULL,
+  carPlateNumber varchar(40) NOT NULL, 
+  latitude double,
+  longtitude double,
+  speed int,
+  direction int,
+  siteName varchar(40),
+  time timestamp,
+  isRapidlySpeedup int,
+  isRapidlySlowdown int,
+  isNeutralSlide int,
+  isNeutralSlideFinished int,
+  neutralSlideTime long,
+  isOverspeed int,
+  isOverspeedFinished int,
+  overspeedTime long,
+  isFatigueDriving int,
+  isHthrottleStop int,
+  isOilLeak int,
+  PRIMARY KEY (recordID)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
