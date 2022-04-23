@@ -33,10 +33,10 @@ def listDriver(driverid):
     cur = db.cursor()
     cur.execute("select * from realtime_records where driverID = '{0}'".format(driverid))
     res = cur.fetchall()
-    for data in res:
-        print(data)
+    for record in res:
+        print(record)
     if res:
-        return render_template("driver_behavior_table.html", res = res)
+        return render_template("list.html", res = res)
     else:
         return "ERROR"
 
