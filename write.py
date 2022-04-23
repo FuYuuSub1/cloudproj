@@ -15,7 +15,7 @@ def db_connection():
 db = db_connection()
 cur = db.cursor()
     
-def execute(t):
+def feedToRealtimeTable(t):
     #sql = "SELECT * FROM detail_records WHERE time='{0}'".format(t)
     #cur.execute(sql)
     #records = cur.fetchall()
@@ -24,20 +24,14 @@ def execute(t):
     #        print(record)
     sql2 = "INSERT INTO realtime_records SELECT * FROM detail_records WHERE detail_records.time='{0}'".format(t)
 
-    print(sql2)
-
-'''
-
-'''
-
+    cur.execute(sql2)
+    db.commit()
 
 experimentTime = datetime(2017, 1, 1, 8, 0, 0)
-
-print(experimentTime.isoformat(' '))
 
 #while True:
 for i in range(10):
     time.sleep(1)
     experimentTime += timedelta(seconds=1)
     inputTime = experimentTime.strftime("%y-%m-%d %H:%M:%S")
-    execute(experimentTime)
+    feedToRealtimeTable(experimentTime)
