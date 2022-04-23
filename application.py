@@ -17,15 +17,28 @@ def list():
     db = db_connection()
     
     cur = db.cursor()
-    cur.execute('select * from detail_records')
+    cur.execute('select * from realtime_records')
     res = cur.fetchall()
     for data in res:
         print(data)
-    return render_template('list.html', results = res)
+    return render_template('list.html', res = res)
 
 @application.route('/')
 def home():
     return render_template('home.html')
+
+@application.route('/list/<driverid>')
+def listDriver(driverid):
+    db = db_connection()
+    cur = db.cursor()
+    cur.execute("select * from realtime_records where driverID = '{0}'".format(driverid))
+    res = cur.fetchall()
+    for data in res:
+        print(data)
+    if res:
+        return render_template("driver_behavior_table.html", res = res)
+    else:
+        return "ERROR"
 
 if __name__ == '__main__':
 	application.run(port=5000, debug = True)
