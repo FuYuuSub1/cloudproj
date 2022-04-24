@@ -29,8 +29,7 @@ def feedToRealtimeTable(t):
 
 experimentTime = datetime(2017, 1, 1, 8, 0, 0)
 
-#while True:
-for i in range(10):
+while True:
     time.sleep(1)
     experimentTime += timedelta(seconds=1)
     inputTime = experimentTime.strftime("%y-%m-%d %H:%M:%S")

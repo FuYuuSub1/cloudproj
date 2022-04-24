@@ -1,10 +1,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <h2><a href="/list">Go to driver behavior page</a></h2>
+    <h2><a href="/list">Back to driver behavior page</a></h2>
     <title>Real-time Monitoring</title>
     <script src="http://cdn.hcharts.cn/jquery/jquery-1.8.3.min.js"></script>
-    <script src="http://code.highcharts.com/stock/highstock.js"></script>
+    <script src="http://cdn.hcharts.cn/highstock/highstock.js"></script>
     <script src="http://cdn.hcharts.cn/highcharts/modules/exporting.js"></script>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
@@ -14,23 +14,81 @@
     />
   </head>
   <body>
-    <div id="container0" style="min-width: 400px; height: 400px"></div>
-    <button id="button0">driver0</button>
-    <button id="button1">driver1</button>
-    <button id="button2">driver2</button>
-    <button id="button3">driver3</button>
-    <button id="button4">driver4</button>
-    <button id="button5">driver5</button>
-    <button id="button6">driver6</button>
-    <button id="button7">driver7</button>
-    <button id="button8">driver8</button>
-    <button id="button9">driver9</button>
-    <div
-      id="warning"
-      ,
-      style="border: 1px dotted; border-radius; 5px; padding: 10px;"
-    >
-      Warning
+    <div id="container">
+      <div
+        id="containerchart"
+        class="chart"
+        style="height: 500px; width: 1000px"
+      ></div>
     </div>
   </body>
+
+  <script type="text/javascript">
+    var seriesData = [];
+    var overspeedList = [];
+    $(function () {
+      var tempSeries = [];
+      var did = "{{driverid}}";
+      var d = "{{results}}";
+      var path = "/data/" + did;
+      $.getJSON(path, function (data) {
+        for (var i = 0; i < data.length; i++) {
+          theDate = Date.parse(data[i][1])
+          seriesData[i] = new Array(theDate, data[i][0]);
+          overspeedList[i] = data[i][2];
+        }
+        console.log(seriesData)
+        $("#containerchart").highcharts("StockChart", {
+          chart: {
+            events: {
+              load: function () {
+                var chart = $("#containerchart").highcharts();
+                var series = chart.series;
+
+                setInterval(function () {
+                  $.getJSON(path, function (data2) {
+                    for (var j = 0; j < data2.length; j++) {
+                      series[0].addPoint(data2[j][1], data2[j][0]);
+                      if (data2[j][2] == 1) {
+                        alert("Driver " + did + " overspeed at " + data2[j][1]);
+                      }
+                    }
+                  });
+                }, 30000);
+              },
+            },
+          },
+          rangeSelector: {
+            selected: 1,
+          },
+          title: {
+            text: "Record",
+          },
+          xAxis: {
+            title: {
+              text: "Date of record",
+            },
+            type: "datetime",
+          },
+          yAxis: {
+            title: {
+              text: "Speed (km/h)",
+            },
+          },
+          legend: {
+            layout: "vertical",
+            align: "right",
+            verticalAlign: "middle",
+          },
+          series: [{
+            name: "{{driverid}}",
+            data: seriesData,
+            tooltip: {
+                valueDecimals: 2
+            }
+          }],
+        });
+      });
+    });
+  </script>
 </html>

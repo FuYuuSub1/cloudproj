@@ -18,8 +18,6 @@ pwd = os.path.abspath(os.getcwd())
 
 record_path = os.path.join(pwd, 'detail_records')
 
-
-
 def db_connection():
 	db = mysql.connector.connect( host = 'comp4442-groupproj.cmwdjsysdln7.us-east-1.rds.amazonaws.com',
 	user = 'admin',
