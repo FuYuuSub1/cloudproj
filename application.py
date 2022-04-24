@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request
 import mysql.connector
+import pandas as pd
+import os
 
 application = Flask(__name__)
 
@@ -13,15 +15,18 @@ def db_connection():
 	return db
 
 @application.route('/list')
-def list():
-    db = db_connection()
-    
-    cur = db.cursor()
-    cur.execute('select * from realtime_records')
-    res = cur.fetchall()
-    for data in res:
-        print(data)
-    return render_template('list.html', res = res)
+def listAllDrivers():
+    pwd = os.path.abspath(os.getcwd())
+    record_path = os.path.join(pwd, 'SparkAggregatedData')
+    res = []
+    for filename in os.listdir(record_path):
+        f = os.path.join(record_path, filename)
+        with open(f) as file:
+            lines = file.readlines()
+            for i in lines:
+                i = i.replace("(","").replace(")","").replace(" ","").replace("'", "").replace("\n","")
+                res.append(i.split(","))
+            return render_template("list.html", res = res)
 
 @application.route('/')
 def home():
@@ -29,16 +34,21 @@ def home():
 
 @application.route('/list/<driverid>')
 def listDriver(driverid):
-    db = db_connection()
-    cur = db.cursor()
-    cur.execute("select * from realtime_records where driverID = '{0}'".format(driverid))
-    res = cur.fetchall()
-    for record in res:
-        print(record)
-    if res:
-        return render_template("list.html", res = res)
-    else:
-        return "ERROR"
+    pwd = os.path.abspath(os.getcwd())
+    record_path = os.path.join(pwd, 'SparkAggregatedData')
+    res = []
+
+    for filename in os.listdir(record_path):
+        f = os.path.join(record_path, filename)
+        with open(f) as file:
+            lines = file.readlines()
+            for i in lines:
+                i = i.replace("(","").replace(")","").replace(" ","").replace("'", "").replace("\n","")
+                if driverid in i:
+                    print(i)
+                    res.append(i.split(","))
+                    return render_template("listADriver.html", res = res, driverid = driverid)
+            return "ERROR"
 
 if __name__ == '__main__':
 	application.run(port=5000, debug = True)
